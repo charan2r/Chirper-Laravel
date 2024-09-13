@@ -17,15 +17,15 @@ class ChirpController extends Controller
      */
     public function index():View
     {
-        return view('chirps.index',[
-            'chirps'=>Chirp::with('user')->latest()->get(),
+        return view(view: 'chirps.index',data: [
+            'chirps'=>Chirp::with(relations: 'user')->latest()->get(),
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): void
     {
         //
     }
@@ -35,17 +35,17 @@ class ChirpController extends Controller
      */
     public function store(Request $request):RedirectResponse
     {
-        $validated = $request->validate([
+        $validated = $request->validate(rules: [
             'message' => 'required|string|min:5|max:255',
         ]);
         $request->user()->chirps()->create($validated);
-        return redirect(route('chirps.index'));
+        return redirect(to: route(name: 'chirps.index'));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Chirp $chirp)
+    public function show(Chirp $chirp): void
     {
         
     }
@@ -55,8 +55,8 @@ class ChirpController extends Controller
      */
     public function edit(Chirp $chirp):View
     {
-        Gate::authorize('update', $chirp);
-        return view('chirps.edit',[
+        Gate::authorize(ability: 'update', arguments: $chirp);
+        return view(view: 'chirps.edit',data: [
             'chirp'=>$chirp
         ]);
     }
@@ -66,12 +66,12 @@ class ChirpController extends Controller
      */
     public function update(Request $request, Chirp $chirp):RedirectResponse
     {
-        Gate::authorize('update',$chirp);
-        $validated= $request->validate([
+        Gate::authorize(ability: 'update',arguments: $chirp);
+        $validated= $request->validate(rules: [
             'message'=>'required|string|max:255'
         ]);
-        $chirp->update(($validated));
-        return redirect(route('chirps.index'));
+        $chirp->update(attributes: ($validated));
+        return redirect(to: route(name: 'chirps.index'));
     }
 
     /**
@@ -79,8 +79,8 @@ class ChirpController extends Controller
      */
     public function destroy(Chirp $chirp):RedirectResponse
     {
-        Gate::authorize('update',$chirp);
+        Gate::authorize(ability: 'update',arguments: $chirp);
         $chirp->delete();
-        return redirect(route('chirps.index'));
+        return redirect(to: route(name: 'chirps.index'));
     }
 }

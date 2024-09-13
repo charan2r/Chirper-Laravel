@@ -20,15 +20,15 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view(view: 'auth.login');
     }
     protected function authenticated(Request $request, $user)
     {
         if ($user->is_admin) {
-            return Redirect::intended('/admin');
+            return Redirect::intended(default: '/admin');
         }
 
-        return Redirect::intended('/dashboard'); // Or wherever regular users are redirected
+        return Redirect::intended(default: '/dashboard'); // Or wherever regular users are redirected
     }
 
     /**
@@ -40,7 +40,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return redirect()->intended(default: RouteServiceProvider::HOME);
     }
 
     /**
@@ -48,12 +48,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        Auth::guard(name: 'web')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect(to: '/');
     }
 }

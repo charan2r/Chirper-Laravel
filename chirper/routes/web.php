@@ -3,8 +3,9 @@
 use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\View\View;
+use Illuminate\Contracts\View\Factory;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,29 +18,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get(uri: '/', action: function (): Factory|View {
+    return view(view: 'welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get(uri: '/dashboard', action: function (): Factory|View {
+    return view(view: 'dashboard');
+})->middleware(middleware: ['auth', 'verified'])->name(name: 'dashboard');
 
-/*Route::middleware(['auth', 'verified', 'admin'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin');
-});*/
+Route::get(uri: '/admin', action: [AdminController::class, 'dashboard'])
+    ->name(name: 'admin.dashboard')
+    ->middleware(middleware: ['auth', 'admin']);
 
-Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard')->middleware('auth','admin');  
-
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::middleware(middleware: 'auth')->group(callback: function (): void {
+    Route::get(uri: '/profile', action: [ProfileController::class, 'edit'])->name(name: 'profile.edit');
+    Route::patch(uri: '/profile', action: [ProfileController::class, 'update'])->name(name: 'profile.update');
+    Route::delete(uri: '/profile', action: [ProfileController::class, 'destroy'])->name(name: 'profile.destroy');
 });
 
-Route::resource('chirps', ChirpController::class)
-        ->only(['index','store', 'edit', 'update', 'destroy'])
-        ->middleware(['auth','verified']);
+Route::resource(name: 'chirps', controller: ChirpController::class)
+        ->only(methods: ['index', 'store', 'edit', 'update', 'destroy'])
+        ->middleware(middleware: ['auth', 'verified']);
 
 require __DIR__.'/auth.php';

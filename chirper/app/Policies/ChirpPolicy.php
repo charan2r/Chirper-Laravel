@@ -11,7 +11,7 @@ class ChirpPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user): void
     {
         //
     }
@@ -19,7 +19,7 @@ class ChirpPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Chirp $chirp)
+    public function view(User $user, Chirp $chirp): void
     {
         //
     }
@@ -27,7 +27,7 @@ class ChirpPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user)
+    public function create(User $user): void
     {
         //
     }
@@ -37,7 +37,7 @@ class ChirpPolicy
      */
     public function update(User $user, Chirp $chirp): bool
     {
-        return $chirp->user()->is($user);
+        return $chirp->user()->is(model: $user);
     }
 
     /**
@@ -45,13 +45,13 @@ class ChirpPolicy
      */
     public function delete(User $user, Chirp $chirp):bool
     {
-        return $this->update($user,$chirp);
+        return $this->update(user: $user,chirp: $chirp);
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Chirp $chirp)
+    public function restore(User $user, Chirp $chirp): void
     {
         //
     }
@@ -59,7 +59,7 @@ class ChirpPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Chirp $chirp)
+    public function forceDelete(User $user, Chirp $chirp): void
     {
         //
     }
